@@ -1,7 +1,11 @@
-document.getElementById(caja)
+let select=document.getElementById(dificultad)
+
+console.log(select)
 
 let numfilas = 10
 let numcolumnas1 = 10
+
+document.getElementById(caja)
 
 for (numfilas;numfilas>=0;numfilas--) {
     let numcolumnas2 = numcolumnas1 
