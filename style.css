@@ -1,3 +1,7 @@
+body {
+    background-color: darkgrey;
+}
+
 h1, h2 {
     text-align: center;
 }
@@ -9,8 +13,12 @@ h1, h2 {
     margin: 1%;
 }
 
-#caja {
+select{
     background-color: darkgrey;
+    border: 1px solid black;
+}
+
+#caja {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -23,6 +31,7 @@ h1, h2 {
     margin: 0.1%;
     background-color: grey;
     border: 1px solid black;
+    border-radius: 25%;
 }
 
 .fila {
