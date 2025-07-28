@@ -16,6 +16,10 @@ h1, h2 {
 select{
     background-color: darkgrey;
     border: 1px solid black;
+    display: block;
+    height: 10%;
+    width: 25%;
+    border-radius: 20px;
 }
 
 #caja {
