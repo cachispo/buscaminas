@@ -14,7 +14,7 @@ function CrearTablero () {
         caja.appendChild(fila);
         for (numcolumnas2;numcolumnas2>=1;numcolumnas2--) {
             let celda = document.createElement("div");
-            celda.classList.add("celda");
+            celda.classList.add("oculto");
             celda.setAttribute("id", `celda${idcelda}`);
             fila.appendChild(celda);
             idcelda++
@@ -26,7 +26,8 @@ function AñadirMinas () {
     let maxtablero = (numfilas*numcolumnas1)
     sitiomina = Math.floor(Math.random() * maxtablero) + 1;
     for (numminas;numminas>=0;numminas--) {
-
+        let minada = document.getElementById(`celda${sitiomina}`)
+        minada.classList.add("minada")
     }
 }
 
@@ -46,4 +47,5 @@ select.addEventListener('change', () => {
         numminas = 99
     };
     CrearTablero();
+    AñadirMinas();
 })

@@ -29,7 +29,7 @@ select{
     height: 100%;
 }
 
-.celda {
+.oculto {
     width: 1%;
     aspect-ratio: 1 / 1;
     margin: 0.1%;
