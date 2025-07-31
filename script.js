@@ -1,18 +1,18 @@
 let select=document.getElementById("dificultad")
 let dificultad;
 let numfilas, numcolumnas1, idcelda, numminas, sitiomina;
+let caja = document.getElementById("caja")
 
 function CrearTablero () {
-    document.getElementById(caja)
     caja.innerHTML = "";
     idcelda = 1;
 
-    for (numfilas;numfilas>=1;numfilas--) {
+    for (f=numfilas;f>=1;f--) {
         let numcolumnas2 = numcolumnas1;
         let fila = document.createElement("div");
         fila.classList.add("fila");
         caja.appendChild(fila);
-        for (numcolumnas2;numcolumnas2>=1;numcolumnas2--) {
+        for (c=numcolumnas2;c>=1;c--) {
             let celda = document.createElement("div");
             celda.classList.add("oculto");
             celda.setAttribute("id", `celda${idcelda}`);
@@ -23,11 +23,13 @@ function CrearTablero () {
 };
 
 function AñadirMinas () {
-    let maxtablero = (numfilas*numcolumnas1)
-    sitiomina = Math.floor(Math.random() * maxtablero) + 1;
-    for (numminas;numminas>=0;numminas--) {
+    let maxtablero = (numfilas*numcolumnas1);
+    console.log(maxtablero)
+    for (let i = 0; i < numminas; i++) {
+        sitiomina = Math.floor(Math.random() * maxtablero) + 1;
         let minada = document.getElementById(`celda${sitiomina}`)
         minada.classList.add("minada")
+        console.log(sitiomina)
     }
 }
 
