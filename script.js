@@ -4,6 +4,7 @@ let numfilas, numcolumnas1, idcelda, numminas, sitiomina;
 let caja = document.getElementById("caja")
 
 function CrearTablero () {
+    // Se vacía la caja por si se cambia lla dificultad durante una partida.
     caja.innerHTML = "";
     idcelda = 1;
 
@@ -33,6 +34,8 @@ function AñadirMinas () {
     }
 }
 
+// La dificultad se puede cambiar en cualquier momento.
+// En consecuencia se crea el nuevo tablero y se añaden las minas.
 select.addEventListener('change', () => {
     dificultad = select.value;
     if (dificultad == "facil"){
@@ -51,3 +54,20 @@ select.addEventListener('change', () => {
     CrearTablero();
     AñadirMinas();
 })
+
+//let celdas = document.querySelectorAll('[id^="celda"]');
+
+//celdas.forEach(celda => {
+//    celda.addEventListener('click', () => {
+//    celda.classList.remove('oculto');
+//    celda.classList.add('visible');
+//  });
+//});
+
+// Cuando se haga click en una celda se cambia la clase a visible.
+document.getElementById('caja').addEventListener('click', e => {
+    const celda = e.target.closest('[id^="celda"]');
+    if (!celda) return;
+    celda.classList.remove('oculto');
+    celda.classList.add('visible');
+});
