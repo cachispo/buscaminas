@@ -16,7 +16,7 @@ function CrearTablero () {
         for (c=numcolumnas2;c>=1;c--) {
             let celda = document.createElement("div");
             celda.classList.add("oculto");
-            celda.setAttribute("id", `celda${idcelda}`);
+            celda.setAttribute("id", idcelda);
             fila.appendChild(celda);
             idcelda++
         };
@@ -25,12 +25,10 @@ function CrearTablero () {
 
 function AñadirMinas () {
     let maxtablero = (numfilas*numcolumnas1);
-    console.log(maxtablero)
     for (let i = 0; i < numminas; i++) {
         sitiomina = Math.floor(Math.random() * maxtablero) + 1;
-        let minada = document.getElementById(`celda${sitiomina}`)
+        let minada = document.getElementById(sitiomina)
         minada.classList.add("minada")
-        console.log(sitiomina)
     }
 }
 
@@ -66,8 +64,13 @@ select.addEventListener('change', () => {
 
 // Cuando se haga click en una celda se cambia la clase a visible.
 document.getElementById('caja').addEventListener('click', e => {
-    const celda = e.target.closest('[id^="celda"]');
-    if (!celda) return;
-    celda.classList.remove('oculto');
-    celda.classList.add('visible');
+    let celda = e.target.closest('[id]');
+    //let cerca = document.getElementById('celda')
+    let derecha = Number(celda.id)+1
+    derecha = document.getElementById(derecha)
+    if (!derecha.classList.contains('minada')){
+        derecha.classList.replace('oculto', 'visible')
+    }
+    console.log(derecha)
+    celda.classList.replace('oculto', 'visible')
 });
