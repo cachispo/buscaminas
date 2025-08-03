@@ -53,24 +53,15 @@ select.addEventListener('change', () => {
     AñadirMinas();
 })
 
-//let celdas = document.querySelectorAll('[id^="celda"]');
-
-//celdas.forEach(celda => {
-//    celda.addEventListener('click', () => {
-//    celda.classList.remove('oculto');
-//    celda.classList.add('visible');
-//  });
-//});
-
 // Cuando se haga click en una celda se cambia la clase a visible.
 document.getElementById('caja').addEventListener('click', e => {
     let celda = e.target.closest('[id]');
-    //let cerca = document.getElementById('celda')
-    let derecha = Number(celda.id)+1
-    derecha = document.getElementById(derecha)
-    if (!derecha.classList.contains('minada')){
-        derecha.classList.replace('oculto', 'visible')
-    }
-    console.log(derecha)
+    if (!celda) return;
     celda.classList.replace('oculto', 'visible')
+    let pos = Number(celda.id);
+    let derecha;
+    while ((derecha = document.getElementById(++pos))) {
+        derecha.classList.replace('oculto', 'visible');
+        if (derecha.classList.contains('minada')) break; // paro al llegar a una mina
+    }
 });
