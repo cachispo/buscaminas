@@ -77,8 +77,8 @@ document.getElementById('caja').addEventListener('click', e => {
     let pos = Number(celda.id);
     let derecha;
     while ((derecha = document.getElementById(++pos))) {
-        derecha.classList.replace('oculto', 'visible');
         if (derecha.classList.contains('minada')) break; // paro al llegar a una mina
+        derecha.classList.replace('oculto', 'visible');
     }
 });
 
