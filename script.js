@@ -32,6 +32,21 @@ function AñadirMinas () {
     }
 }
 
+function CalcularVecinos () {
+    let celdas = document.getElementsByClassName('oculto')
+    for (let celda of celdas) {
+        let minacerca = 0;
+        let vecinoId = Number(celda.id) - 1;
+        let vecino = document.getElementById(vecinoId);
+        if (vecino && vecino.classList.contains('minada')) {
+            minacerca ++
+        }
+        if (minacerca !== 0) {
+            celda.textContent = minacerca;
+        }
+    }
+}
+
 // La dificultad se puede cambiar en cualquier momento.
 // En consecuencia se crea el nuevo tablero y se añaden las minas.
 select.addEventListener('change', () => {
@@ -51,6 +66,7 @@ select.addEventListener('change', () => {
     };
     CrearTablero();
     AñadirMinas();
+    CalcularVecinos();
 })
 
 // Cuando se haga click en una celda se cambia la clase a visible.
@@ -63,5 +79,18 @@ document.getElementById('caja').addEventListener('click', e => {
     while ((derecha = document.getElementById(++pos))) {
         derecha.classList.replace('oculto', 'visible');
         if (derecha.classList.contains('minada')) break; // paro al llegar a una mina
+    }
+});
+
+document.getElementById('caja').addEventListener('contextmenu', b => {
+    b.preventDefault();
+    let celda = b.target.closest('[id]');
+    if (!celda) return;
+    if (celda.classList.contains('bandera')) {
+        celda.classList.replace('bandera', 'oculto');
+        celda.textContent = '';
+    } else if (celda.classList.contains('oculto')) {
+        celda.classList.replace('oculto', 'bandera');
+        celda.textContent = '🚩';
     }
 });
