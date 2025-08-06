@@ -36,13 +36,40 @@ function CalcularVecinos () {
     let celdas = document.getElementsByClassName('oculto')
     for (let celda of celdas) {
         let minacerca = 0;
-        let vecinoId = Number(celda.id) - 1;
-        let vecino = document.getElementById(vecinoId);
-        if (vecino && vecino.classList.contains('minada')) {
-            minacerca ++
+        // Este array contiene todos los vecinos
+        let vecinos = [(Number(celda.id)-numcolumnas1-1),
+                    (Number(celda.id)-numcolumnas1),
+                    (Number(celda.id)-numcolumnas1+1),
+                    (Number(celda.id) - 1),
+                    (Number(celda.id) + 1),
+                    (Number(celda.id)+numcolumnas1-1),
+                    (Number(celda.id)+numcolumnas1),
+                    (Number(celda.id)+numcolumnas1+1)]
+        // Por cada vecino se añade 1 a minacerca para mostrar las minas cercanas
+        for (let vecino of vecinos) {
+            console.log(vecino)
+            vecino = document.getElementById(vecino);
+            // Busco los padres que son las filas
+            // Si al principio de la fila 2 hay mina no quiero 
+            // que al final de la fila 1 cuente que hay mina cerca.
+            //let padre1 = vecino.parentNode;
+            //let padre2 = celda.parentNode;
+            if (/*padre1==padre2 && */vecino && vecino.classList.contains('minada')) {
+                minacerca ++
+            }
         }
-        if (minacerca !== 0) {
+        // Si hay más de 0 vecinos minados se añade la cantidad
+        if (minacerca > 0) {
             celda.textContent = minacerca;
+        }
+    }
+}
+
+function TerminarJuego () {
+    for (let i=1; i<=(numfilas*numcolumnas1); i++) {
+        let celda = document.getElementById(i);
+        if (!celda.classList.contains('minada')) {
+            celda.classList.replace('oculto', 'visible');
         }
     }
 }
@@ -67,12 +94,15 @@ select.addEventListener('change', () => {
     CrearTablero();
     AñadirMinas();
     CalcularVecinos();
-})
+});
 
 // Cuando se haga click en una celda se cambia la clase a visible.
 document.getElementById('caja').addEventListener('click', e => {
     let celda = e.target.closest('[id]');
     if (!celda) return;
+    if (celda.classList.contains('minada')) {
+        TerminarJuego();
+    }
     celda.classList.replace('oculto', 'visible')
     let pos = Number(celda.id);
     let derecha;
