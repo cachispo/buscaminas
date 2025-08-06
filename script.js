@@ -47,13 +47,14 @@ function CalcularVecinos () {
                     (Number(celda.id)+numcolumnas1+1)]
         // Por cada vecino se añade 1 a minacerca para mostrar las minas cercanas
         for (let vecino of vecinos) {
-            console.log(vecino)
             vecino = document.getElementById(vecino);
+            console.log(vecino)
             // Busco los padres que son las filas
             // Si al principio de la fila 2 hay mina no quiero 
             // que al final de la fila 1 cuente que hay mina cerca.
-            //let padre1 = vecino.parentNode;
-            //let padre2 = celda.parentNode;
+            let padre1 = vecino.parentNode;
+            let padre2 = celda.parentNode;
+            console.log(padre1, padre2)
             if (/*padre1==padre2 && */vecino && vecino.classList.contains('minada')) {
                 minacerca ++
             }
