@@ -34,28 +34,46 @@ function AñadirMinas () {
 
 function CalcularVecinos () {
     let celdas = document.getElementsByClassName('oculto')
+    
+    let PrimerasCeldas = new Set();
+    for (let f = 0; f < numfilas; f++) {
+        PrimerasCeldas.add((f * numcolumnas1) + 1);
+    };
+    let UltimasCeldas = new Set();
+    for (let f = 0; f < numfilas; f++) {
+        UltimasCeldas.add((f + 1) * numcolumnas1);
+    };
+
     for (let celda of celdas) {
         let minacerca = 0;
-        // Este array contiene todos los vecinos
-        let vecinos = [(Number(celda.id)-numcolumnas1-1),
-                    (Number(celda.id)-numcolumnas1),
-                    (Number(celda.id)-numcolumnas1+1),
-                    (Number(celda.id) - 1),
-                    (Number(celda.id) + 1),
-                    (Number(celda.id)+numcolumnas1-1),
-                    (Number(celda.id)+numcolumnas1),
-                    (Number(celda.id)+numcolumnas1+1)]
+        let vecinos;
+        // Se cambia el array de vecinos según estén al principio o final de la fila.
+        if (PrimerasCeldas.has(Number(celda.id))){
+            vecinos = [(Number(celda.id)-numcolumnas1),
+                (Number(celda.id)-numcolumnas1+1),
+                (Number(celda.id) + 1),
+                (Number(celda.id)+numcolumnas1),
+                (Number(celda.id)+numcolumnas1+1)]
+        } else if (UltimasCeldas.has(Number(celda.id))) {
+            vecinos = [(Number(celda.id)-numcolumnas1-1),
+                (Number(celda.id)-numcolumnas1),
+                (Number(celda.id) - 1),
+                (Number(celda.id)+numcolumnas1-1),
+                (Number(celda.id)+numcolumnas1)]
+        } else {
+            vecinos = [(Number(celda.id)-numcolumnas1-1),
+                (Number(celda.id)-numcolumnas1),
+                (Number(celda.id)-numcolumnas1+1),
+                (Number(celda.id) - 1),
+                (Number(celda.id) + 1),
+                (Number(celda.id)+numcolumnas1-1),
+                (Number(celda.id)+numcolumnas1),
+                (Number(celda.id)+numcolumnas1+1)]
+        }
         // Por cada vecino se añade 1 a minacerca para mostrar las minas cercanas
         for (let vecino of vecinos) {
             vecino = document.getElementById(vecino);
-            console.log(vecino)
-            // Busco los padres que son las filas
-            // Si al principio de la fila 2 hay mina no quiero 
-            // que al final de la fila 1 cuente que hay mina cerca.
-            let padre1 = vecino.parentNode;
-            let padre2 = celda.parentNode;
-            console.log(padre1, padre2)
-            if (/*padre1==padre2 && */vecino && vecino.classList.contains('minada')) {
+            if (vecino && vecino.classList.contains('minada')) {
                 minacerca ++
             }
         }

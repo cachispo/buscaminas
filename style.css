@@ -49,6 +49,16 @@ select{
     text-align: center;
 }
 
+.minada {
+    width: 1.5%;
+    aspect-ratio: 1 / 1;
+    margin: 0.1%;
+    background-color: grey;
+    border: 1px solid black;
+    border-radius: 25%;
+    text-align: center;
+}
+
 .bandera {
     width: 1.5%;
     aspect-ratio: 1 / 1;
