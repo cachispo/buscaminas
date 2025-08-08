@@ -1,8 +1,10 @@
 let select=document.getElementById("dificultad")
 let dificultad;
-let numfilas, numcolumnas1, idcelda, numminas, sitiomina, resultado, minasmarcadas;
+let numfilas, numcolumnas1, idcelda, numminas, sitiomina, resultado;
+let minasmarcadas = 0
 let caja = document.getElementById("caja");
 let liberadas = new Set();
+let terminado = false;
 
 function CrearTablero () {
     // Se vacía la caja por si se cambia lla dificultad durante una partida.
@@ -26,10 +28,14 @@ function CrearTablero () {
 
 function AñadirMinas () {
     let maxtablero = (numfilas*numcolumnas1);
-    for (let i = 0; i < numminas; i++) {
-        sitiomina = Math.floor(Math.random() * maxtablero) + 1;
-        let minada = document.getElementById(sitiomina)
-        minada.classList.add("minada")
+    let usados = new Set();
+
+    while (usados.size < numminas) {
+        let sitiomina = Math.floor(Math.random() * maxtablero) + 1;
+        if (!usados.has(sitiomina)) {
+            usados.add(sitiomina);
+            document.getElementById(sitiomina).classList.add('minada');
+        }
     }
 }
 
@@ -86,13 +92,23 @@ function CalcularVecinos () {
 }
 
 function TerminarJuego (resultado) {
-    if (resultado = 'v') {
+    // Para que no se repita el mensaje de victoria
+    if (terminado) return;
+    terminado = true;
+
+    if (resultado == 'v') {
+        for (let i=1; i<=(numfilas*numcolumnas1); i++) {
+            let celda = document.getElementById(i);
+            if (!celda.classList.contains('minada')) {
+                celda.classList.replace('oculto', 'visible');
+            }
+        }
         let p = document.createElement('p')
         p.textContent = 'HAS GANADO';
         p.style.color = '#3be062ff';
         let caja = document.getElementById('caja')
         caja.appendChild(p)
-    } else if (resultado = 'd') {
+    } else if (resultado == 'd') {
         for (let i=1; i<=(numfilas*numcolumnas1); i++) {
             let celda = document.getElementById(i);
             if (!celda.classList.contains('minada')) {
@@ -160,8 +176,28 @@ function LiberarVecinos (celda) {
             vecino.classList.replace('oculto', 'visible')
         }
     }
-    //let caja = document.getElementById('caja')
-    //let nominas = [caja.querySelectorAll('[id]:not(.minada)')];
+    
+    // Por si al clicar se gana la partida.
+    // Se comprueba que todas las celdas que no son minadas
+    // estén visibles.
+    let total = numfilas * numcolumnas1;
+    let noMinas = [];
+    for (let i = 1; i <= total; i++) {
+        let celda = document.getElementById(i);
+        if (celda && !celda.classList.contains('minada')) {
+            noMinas.push(celda);
+        }
+    }
+    let todasminas = 0
+    for (let celda of noMinas) {
+        if (celda.classList.contains('oculto')) {
+            todasminas++
+        }
+    }
+    if (todasminas == 0) {
+        resultado = 'v'
+        TerminarJuego(resultado);
+    }
 }
 
 // La dificultad se puede cambiar en cualquier momento.
@@ -169,6 +205,12 @@ function LiberarVecinos (celda) {
 select.addEventListener('change', () => {
     // Para poder liberar vecinos sin problema
     liberadas.clear();
+
+    // Para que no se repita el mensaje de victoria
+    terminado = false;
+
+    // Para saber si el jugador ha ganado
+    minasmarcadas = 0
 
     dificultad = select.value;
     if (dificultad == "facil"){
@@ -190,6 +232,7 @@ select.addEventListener('change', () => {
 });
 
 // Cuando se haga click en una celda se cambia la clase a visible.
+// O se termina el juego si es mina.
 document.getElementById('caja').addEventListener('click', e => {
     let celda = e.target.closest('[id]');
     if (!celda) return;
@@ -204,9 +247,31 @@ document.getElementById('caja').addEventListener('click', e => {
             LiberarVecinos(celda);
         }
     }
+    
+    // Por si al clicar se gana la partida.
+    // Se comprueba que todas las celdas que no son minadas
+    // estén visibles.
+    let total = numfilas * numcolumnas1;
+    let noMinas = [];
+    for (let i = 1; i <= total; i++) {
+        let celda = document.getElementById(i);
+        if (celda && !celda.classList.contains('minada')) {
+            noMinas.push(celda);
+        }
+    }
+    let todasminas = 0
+    for (let celda of noMinas) {
+        if (celda.classList.contains('oculto')) {
+            todasminas++
+        }
+    }
+    if (todasminas == 0) {
+        resultado = 'v'
+        TerminarJuego(resultado);
+    }
 });
 
-// Cuando se haga click derecho se coloca la bandera
+// Cuando se haga click derecho se coloca la bandera.
 document.getElementById('caja').addEventListener('contextmenu', b => {
     b.preventDefault();
     let celda = b.target.closest('[id]');
@@ -224,7 +289,9 @@ document.getElementById('caja').addEventListener('contextmenu', b => {
         celda.classList.replace('oculto', 'bandera');
         celda.textContent = '🚩';
     }
-    if (minasmarcadas = numminas) {
+    console.log(minasmarcadas)
+    console.log(numminas)
+    if (minasmarcadas == numminas) {
         resultado = 'v'
         TerminarJuego(resultado);
     }

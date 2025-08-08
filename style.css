@@ -26,7 +26,13 @@ select{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     height: 100%;
+}
+
+#caja > p {
+    text-align: center;
+    background-color: grey;
 }
 
 .oculto {
