@@ -4,9 +4,14 @@ let numfilas, numcolumnas1, idcelda, numminas, sitiomina, resultado;
 let minasmarcadas = 0
 let caja = document.getElementById("caja");
 let liberadas = new Set();
+let jugando = false
 let terminado = false;
 
 function CrearTablero () {
+    document.body.style.backgroundColor = 'darkgrey'
+    console.log(document.body)
+    // Para controlar si se está jugando.
+    jugando = false
     // Se vacía la caja por si se cambia lla dificultad durante una partida.
     caja.innerHTML = "";
     idcelda = 1;
@@ -103,9 +108,9 @@ function TerminarJuego (resultado) {
                 celda.classList.replace('oculto', 'visible');
             }
         }
+        document.body.style.backgroundColor = '#3be062ff'
         let p = document.createElement('p')
         p.textContent = 'HAS GANADO';
-        p.style.color = '#3be062ff';
         let caja = document.getElementById('caja')
         caja.appendChild(p)
     } else if (resultado == 'd') {
@@ -115,9 +120,9 @@ function TerminarJuego (resultado) {
                 celda.classList.replace('oculto', 'visible');
             }
         }
+        document.body.style.backgroundColor = '#d32f2f';
         let p = document.createElement('p')
         p.textContent = 'HAS PERDIDO';
-        p.style.color = '#d32f2f';
         let caja = document.getElementById('caja')
         caja.appendChild(p)
     }
@@ -203,37 +208,49 @@ function LiberarVecinos (celda) {
 // La dificultad se puede cambiar en cualquier momento.
 // En consecuencia se crea el nuevo tablero y se añaden las minas.
 select.addEventListener('change', () => {
-    // Para poder liberar vecinos sin problema
-    liberadas.clear();
+    // Para controlar si está jugando
+    let continuar;
+    let seleccionado;
+    if (jugando==true) {
+        continuar = confirm('¿Seguro que deseas abandonar la partida? Perderás el progreso.')
+    }
+    if (continuar==null || continuar==true) {
+        // Para poder liberar vecinos sin problema
+        liberadas.clear();
 
-    // Para que no se repita el mensaje de victoria
-    terminado = false;
+        // Para que no se repita el mensaje de victoria
+        terminado = false;
 
-    // Para saber si el jugador ha ganado
-    minasmarcadas = 0
+        // Para saber si el jugador ha ganado
+        minasmarcadas = 0
 
-    dificultad = select.value;
-    if (dificultad == "facil"){
-        numfilas = 9
-        numcolumnas1 = 9
-        numminas = 10
-    } else if (dificultad == "medio") {
-        numfilas = 16
-        numcolumnas1 = 16
-        numminas = 40
-    } else if (dificultad == "dificil") {
-        numfilas = 16
-        numcolumnas1 = 30
-        numminas = 99
-    };
-    CrearTablero();
-    AñadirMinas();
-    CalcularVecinos();
+        dificultad = select.value;
+        if (dificultad == "facil"){
+            numfilas = 9
+            numcolumnas1 = 9
+            numminas = 10
+        } else if (dificultad == "medio") {
+            numfilas = 16
+            numcolumnas1 = 16
+            numminas = 40
+        } else if (dificultad == "dificil") {
+            numfilas = 16
+            numcolumnas1 = 30
+            numminas = 99
+        };
+        CrearTablero();
+        AñadirMinas();
+        CalcularVecinos();
+    }
+    select.value = seleccionado
 });
 
 // Cuando se haga click en una celda se cambia la clase a visible.
 // O se termina el juego si es mina.
 document.getElementById('caja').addEventListener('click', e => {
+    // Para controlar si está jugando
+    jugando = true
+
     let celda = e.target.closest('[id]');
     if (!celda) return;
     if (celda.classList.contains('minada')) {
@@ -273,6 +290,9 @@ document.getElementById('caja').addEventListener('click', e => {
 
 // Cuando se haga click derecho se coloca la bandera.
 document.getElementById('caja').addEventListener('contextmenu', b => {
+    // Para controlar si está jugando
+    jugando = true
+
     b.preventDefault();
     let celda = b.target.closest('[id]');
     if (!celda) return;
@@ -289,10 +309,13 @@ document.getElementById('caja').addEventListener('contextmenu', b => {
         celda.classList.replace('oculto', 'bandera');
         celda.textContent = '🚩';
     }
-    console.log(minasmarcadas)
-    console.log(numminas)
     if (minasmarcadas == numminas) {
         resultado = 'v'
         TerminarJuego(resultado);
     }
+});
+
+// Para evitar cosas raras en el navegador
+window.addEventListener('load', () => {
+    select.selectedIndex = 0;
 });
