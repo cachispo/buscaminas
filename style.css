@@ -2,8 +2,9 @@ body {
     background-color: darkgrey;
 }
 
-h1, h2 {
+h1, h4 {
     text-align: center;
+    margin: 0.5%;
 }
 
 #seleccionar {
@@ -11,7 +12,7 @@ h1, h2 {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 1%;
+    margin: 0.5%;
 }
 
 select{

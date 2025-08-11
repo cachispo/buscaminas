@@ -9,10 +9,9 @@ let terminado = false;
 
 function CrearTablero () {
     document.body.style.backgroundColor = 'darkgrey'
-    console.log(document.body)
     // Para controlar si se está jugando.
     jugando = false
-    // Se vacía la caja por si se cambia lla dificultad durante una partida.
+    // Se vacía la caja por si se cambia la dificultad durante una partida.
     caja.innerHTML = "";
     idcelda = 1;
 
@@ -100,6 +99,7 @@ function TerminarJuego (resultado) {
     // Para que no se repita el mensaje de victoria
     if (terminado) return;
     terminado = true;
+    jugando = false;
 
     if (resultado == 'v') {
         for (let i=1; i<=(numfilas*numcolumnas1); i++) {
@@ -126,6 +126,28 @@ function TerminarJuego (resultado) {
         let caja = document.getElementById('caja')
         caja.appendChild(p)
     }
+
+    // Botón para iniciar nueva partida
+    let nuevojuego = document.createElement('button')
+    nuevojuego.id = 'boton'
+    nuevojuego.textContent = 'Nueva Partida'
+    caja.appendChild(nuevojuego)
+
+    // Si se pulsa se reinicia todo
+    nuevojuego.addEventListener('click', () => {
+        // Resetea estados
+        liberadas.clear();
+        terminado = false;
+        minasmarcadas = 0;
+        jugando = false;
+
+        // Vuelve al estado inicial
+        caja.innerHTML = '';
+        document.body.style.backgroundColor = '#A9A9A9';
+        CrearTablero();
+        AñadirMinas();
+        CalcularVecinos();
+    });
 }
 
 function LiberarVecinos (celda) {
