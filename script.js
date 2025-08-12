@@ -321,7 +321,7 @@ select.addEventListener('change', () => {
 document.getElementById('caja').addEventListener('click', e => {
     // Para controlar si no se pulsa una celda
     let celda = e.target.closest('[id]');
-    // Si no se cuenta el botón de nueva partida como celda y se inicia el cronómetro
+    // Para que no cuente el botón de nueva partida como celda y se inicia el cronómetro
     if (!celda || celda.id == 'boton' || celda.id == 'tiempo' || celda.id == 'caja') return;
     
     // Para controlar si está jugando
@@ -407,4 +407,16 @@ infoboton.addEventListener('click', () => {
   } else if (infocaja.classList.contains('cajavisible')) {
     infocaja.classList.replace('cajavisible', 'cajaoculta')
   }
+});
+
+// Por si se clica cualquier cosa fuera de la caja
+document.addEventListener('click', i => {
+    // Si la caja no está visible no hacemos nada
+    if (!infocaja.classList.contains('cajavisible')) return;
+
+    // Si el click fue dentro del botón o dentro de la caja → no cerramos
+    if (infoboton.contains(i.target) || infocaja.contains(i.target)) return;
+
+    // En cualquier otro caso la cerramos
+    infocaja.classList.replace('cajavisible', 'cajaoculta');
 });

@@ -99,6 +99,7 @@ select{
     margin: 0.5rem;
     height: 33px;
     aspect-ratio: 1 / 1;
+    border: 1px solid black;
     background-color: grey;
     border-radius: 50%;
 }
