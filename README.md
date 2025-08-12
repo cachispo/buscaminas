@@ -1,4 +1,5 @@
-# buscaminas
-Buscaminas en proceso...⌛
+# Buscaminas
 
-Estoy intentando hacer un buscaminas con html, css y js.
+💣💥
+
+Escrito enteramente con HTML, CSS y JavaScript.
