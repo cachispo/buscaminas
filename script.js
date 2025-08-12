@@ -1,11 +1,14 @@
 let select=document.getElementById("dificultad")
 let dificultad;
-let numfilas, numcolumnas1, idcelda, numminas, sitiomina, resultado;
+let numfilas, numcolumnas1, idcelda, numminas, sitiomina, resultado, seleccionado;
 let minasmarcadas = 0
 let caja = document.getElementById("caja");
 let liberadas = new Set();
 let jugando = false
 let terminado = false;
+let cronometro;
+let segundos = 0;
+let cronometroActivo = false;
 
 function CrearTablero () {
     document.body.style.backgroundColor = 'darkgrey'
@@ -28,6 +31,7 @@ function CrearTablero () {
             idcelda++
         };
     };
+    ReiniciarCronometro();
 };
 
 function AñadirMinas () {
@@ -111,6 +115,7 @@ function TerminarJuego (resultado) {
         document.body.style.backgroundColor = '#3be062ff'
         let p = document.createElement('p')
         p.textContent = 'HAS GANADO';
+        p.style.fontWeight = 'bold'
         let caja = document.getElementById('caja')
         caja.appendChild(p)
     } else if (resultado == 'd') {
@@ -123,9 +128,11 @@ function TerminarJuego (resultado) {
         document.body.style.backgroundColor = '#d32f2f';
         let p = document.createElement('p')
         p.textContent = 'HAS PERDIDO';
+        p.style.fontWeight = 'bold'
         let caja = document.getElementById('caja')
         caja.appendChild(p)
     }
+    PararCronometro();
 
     // Botón para iniciar nueva partida
     let nuevojuego = document.createElement('button')
@@ -147,6 +154,7 @@ function TerminarJuego (resultado) {
         CrearTablero();
         AñadirMinas();
         CalcularVecinos();
+        ReiniciarCronometro();
     });
 }
 
@@ -227,12 +235,50 @@ function LiberarVecinos (celda) {
     }
 }
 
+function IniciarCronometro() {
+    // Por si hay cronómetro antiguo
+    if (cronometroActivo) return;
+    let viejo = document.getElementById('tiempo');
+    if (viejo) viejo.remove();
+
+    let divTiempo = document.createElement('div');
+    divTiempo.id = 'tiempo';
+    divTiempo.innerHTML = 'Tiempo: <span id="tiempoSpan">00:00</span>';
+    let caja = document.getElementById('caja') 
+    caja.appendChild(divTiempo);
+
+    if (cronometro) return;
+    cronometro = setInterval(() => {
+        segundos++;
+        let m = String(Math.floor(segundos / 60)).padStart(2, '0');
+        let s = String(segundos % 60).padStart(2, '0');
+        document.getElementById('tiempoSpan').textContent = `${m}:${s}`;
+    }, 1000);
+
+    cronometroActivo = true;
+}
+
+function PararCronometro() {
+    cronometroActivo = false;
+    clearInterval(cronometro);
+    cronometro = null;
+}
+
+function ReiniciarCronometro() {
+    cronometroActivo = false;
+    clearInterval(cronometro);
+    cronometro = null;
+    segundos   = 0;
+    if (document.getElementById('tiempo')){
+        document.getElementById('tiempo').remove();
+    }
+}
+
 // La dificultad se puede cambiar en cualquier momento.
 // En consecuencia se crea el nuevo tablero y se añaden las minas.
 select.addEventListener('change', () => {
     // Para controlar si está jugando
     let continuar;
-    let seleccionado;
     if (jugando==true) {
         continuar = confirm('¿Seguro que deseas abandonar la partida? Perderás el progreso.')
     }
@@ -263,18 +309,27 @@ select.addEventListener('change', () => {
         CrearTablero();
         AñadirMinas();
         CalcularVecinos();
+        if (document.getElementById('tiempo')){
+            ReiniciarCronometro();
+        }
     }
-    select.value = seleccionado
+    select.value = null
 });
 
 // Cuando se haga click en una celda se cambia la clase a visible.
 // O se termina el juego si es mina.
 document.getElementById('caja').addEventListener('click', e => {
-    // Para controlar si está jugando
-    jugando = true
-
+    // Para controlar si no se pulsa una celda
     let celda = e.target.closest('[id]');
-    if (!celda) return;
+    // Si no se cuenta el botón de nueva partida como celda y se inicia el cronómetro
+    if (!celda || celda.id == 'boton' || celda.id == 'tiempo' || celda.id == 'caja') return;
+    
+    // Para controlar si está jugando
+    if (jugando == false) {
+        jugando = true
+        IniciarCronometro();
+    }
+
     if (celda.classList.contains('minada')) {
         resultado = 'd'
         TerminarJuego(resultado);
@@ -340,4 +395,16 @@ document.getElementById('caja').addEventListener('contextmenu', b => {
 // Para evitar cosas raras en el navegador
 window.addEventListener('load', () => {
     select.selectedIndex = 0;
+});
+
+// Caja con información
+let infoboton  = document.getElementById('infoboton');
+let infocaja = document.getElementById('infocaja');
+
+infoboton.addEventListener('click', () => {
+  if (infocaja.classList.contains('cajaoculta')){
+    infocaja.classList.replace('cajaoculta', 'cajavisible')
+  } else if (infocaja.classList.contains('cajavisible')) {
+    infocaja.classList.replace('cajavisible', 'cajaoculta')
+  }
 });

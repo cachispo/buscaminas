@@ -86,3 +86,34 @@ select{
     flex-direction: row;
     justify-content: center;
 }
+
+#tiempo {
+  text-align: center;
+  margin-bottom: .5rem;
+}
+
+#infoboton {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    height: 33px;
+    aspect-ratio: 1 / 1;
+    background-color: grey;
+    border-radius: 50%;
+}
+
+#infocaja {
+    position: fixed;
+    top: calc(0.5rem + 33px);
+    right: 0;
+    background: lightgrey;
+    padding: .5rem;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin: 0.5rem;
+}
+
+.cajaoculta {
+    display: none;
+}
